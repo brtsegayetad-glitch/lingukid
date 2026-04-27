@@ -1,41 +1,41 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react'; 
 import { createClient } from '@/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; 
 
-export default function AddChild() {
+// 1. We keep your exact logic inside this component
+function AddChildForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const preSelectedPackage = searchParams.get('packageId') || '';
+  const preSelectedTutor = searchParams.get('tutorId') || '';
+
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [grade, setGrade] = useState('');
   const [phone, setPhone] = useState('');
   
-  // Updated states to handle time per day
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [dayTimes, setDayTimes] = useState<Record<string, string>>({});
   
-  const [packageId, setPackageId] = useState('');
+  const [packageId, setPackageId] = useState(preSelectedPackage);
+  const [tutorId, setTutorId] = useState(preSelectedTutor);
+
   const [packages, setPackages] = useState<any[]>([]);
-
-  // NEW: Tutor state
-  const [tutorId, setTutorId] = useState('');
   const [tutors, setTutors] = useState<any[]>([]);
-
   const [loading, setLoading] = useState(false);
   
   const supabase = createClient();
-  const router = useRouter();
-
   const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   useEffect(() => {
     const fetchData = async () => {
-      // Existing fetch for packages
       const { data: pkgData } = await supabase.from('packages').select('*');
       if (pkgData) setPackages(pkgData);
 
-      // NEW: Fetch available tutors
-     const { data: tutorData } = await supabase
+      const { data: tutorData } = await supabase
         .from('tutors')
         .select('id, full_name');
       
@@ -44,7 +44,6 @@ export default function AddChild() {
     fetchData();
   }, [supabase]);
 
-  // Updated toggle: adds/removes day and its specific time
   const toggleDay = (day: string) => {
     if (selectedDays.includes(day)) {
       setSelectedDays(prev => prev.filter(d => d !== day));
@@ -53,7 +52,7 @@ export default function AddChild() {
       setDayTimes(updatedTimes);
     } else {
       setSelectedDays(prev => [...prev, day]);
-      setDayTimes(prev => ({ ...prev, [day]: '16:00' })); // Default time
+      setDayTimes(prev => ({ ...prev, [day]: '16:00' })); 
     }
   };
 
@@ -77,7 +76,6 @@ export default function AddChild() {
       return;
     }
 
-    // Combine days and their specific times into one string
     const formattedSchedule = selectedDays
       .map(day => `${day}: ${dayTimes[day]}`)
       .join(', ');
@@ -92,9 +90,9 @@ export default function AddChild() {
           parent_id: user.id,
           parent_phone: phone,
           preferred_days: selectedDays.join(', '),
-          preferred_time: formattedSchedule, // Saves day-specific times
+          preferred_time: formattedSchedule, 
           package_id: packageId,
-          tutor_id: tutorId // NEW: Save chosen tutor ID
+          tutor_id: tutorId 
         }
       ]);
 
@@ -164,25 +162,23 @@ export default function AddChild() {
             </select>
           </div>
 
-          {/* NEW: Tutor Selection Field */}
           <div className="pt-2">
-    <label className="block text-sm font-bold text-gray-700 mb-1">Choose Tutor</label>
-    <select 
-      required
-      className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
-      value={tutorId}
-      onChange={(e) => setTutorId(e.target.value)}
-    >
-      <option value="" disabled>Select a tutor</option>
-      {tutors.map((tutor) => (
-        <option key={tutor.id} value={tutor.id}>
-          {tutor.full_name} {/* ✅ FIX: Changed from tutor.name */}
-        </option>
-      ))}
-    </select>
-  </div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">Choose Tutor</label>
+            <select 
+              required
+              className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+              value={tutorId}
+              onChange={(e) => setTutorId(e.target.value)}
+            >
+              <option value="" disabled>Select a tutor</option>
+              {tutors.map((tutor) => (
+                <option key={tutor.id} value={tutor.id}>
+                  {tutor.full_name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          {/* Individual Day & Time Selectors */}
           <div className="pt-2">
             <label className="block text-sm font-bold text-gray-700 mb-2">Preferred Days & Times</label>
             <div className="space-y-3">
@@ -230,5 +226,14 @@ export default function AddChild() {
         </form>
       </div>
     </div>
+  );
+}
+
+// 2. THIS IS THE CRITICAL CHANGE: We export a default component that wraps the form in Suspense
+export default function AddChildPage() {
+  return (
+    <Suspense fallback={<div className="p-20 text-center font-black uppercase italic">Synchronizing...</div>}>
+      <AddChildForm />
+    </Suspense>
   );
 }
