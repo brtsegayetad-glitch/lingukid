@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@/supabase';
 import { useRouter } from 'next/navigation';
 import WhiteGloveSetup from './WhiteGloveSetup'; 
+import AdminInsights from './AdminInsights';
 
 export default function AdminTMS() {
   const [activeTab, setActiveTab] = useState('bookings'); 
@@ -29,7 +30,6 @@ export default function AdminTMS() {
     const { data: tData } = await supabase.from('tutors').select('*');
     const { data: sData } = await supabase.from('students').select('*, profiles(email)');
     
-    // ጥያቄውን በ scheduled_at አደራጅተን እናመጣለን
     const { data: bData, error } = await supabase
       .from('bookings')
       .select(`
@@ -45,7 +45,6 @@ export default function AdminTMS() {
       .order('scheduled_at', { ascending: true }); 
 
     if (!error && bData) {
-      // ለዛሬ ቅርብ የሆኑት ከላይ እንዲመጡ በዝርዝሩ መጀመሪያ ላይ እናስቀምጣለን
       setAllBookings(bData);
       setParents(pData || []);
       setTutors(tData || []);
@@ -85,7 +84,7 @@ export default function AdminTMS() {
         </header>
 
         <nav className="flex space-x-4 mb-10 overflow-x-auto pb-4">
-          {['bookings', 'parents', 'tutors', 'students', 'white-glove'].map((tab) => (
+          {['bookings', 'parents', 'tutors', 'students', 'white-glove', 'insights'].map((tab) => (
             <button 
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -206,6 +205,13 @@ export default function AdminTMS() {
               tutors={tutors} 
               onComplete={fetchMasterData} 
             />
+          )}
+
+          {/* INSIGHTS TAB LOGIC ADDED HERE */}
+          {activeTab === 'insights' && (
+            <div className="text-black bg-white rounded-[40px] overflow-hidden">
+              <AdminInsights />
+            </div>
           )}
 
         </div>

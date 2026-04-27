@@ -18,25 +18,39 @@ export default function SmartBookingPage() {
   // --- NEW STATES FOR MULTIPLE CHILDREN ---
   const [children, setChildren] = useState<any[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState('');
+  const [planName, setPlanName] = useState("");
 
-  // Fetch all children associated with this parent on load
+  // Fetch all children and active plan on load
   useEffect(() => {
-    const fetchChildren = async () => {
+    const fetchInitialData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data } = await supabase
+        // 1. Fetch Students
+        const { data: studentData } = await supabase
           .from('students')
           .select('id, name')
           .eq('parent_id', user.id);
-        setChildren(data || []);
+        setChildren(studentData || []);
         
-        // Default to the first child if only one exists
-        if (data && data.length === 1) {
-          setSelectedStudentId(data[0].id);
+        if (studentData && studentData.length === 1) {
+          setSelectedStudentId(studentData[0].id);
+        }
+
+        // 2. Fetch Active Plan Name
+        const { data: subData } = await supabase
+          .from('parent_subscriptions')
+          .select('packages(name)')
+          .eq('parent_id', user.id)
+          .eq('status', 'active')
+          .maybeSingle();
+        
+        if (subData?.packages) {
+          // @ts-ignore
+          setPlanName(subData.packages.name);
         }
       }
     };
-    fetchChildren();
+    fetchInitialData();
   }, [supabase]);
 
   const toggleDay = (day: string) => {
@@ -76,7 +90,7 @@ export default function SmartBookingPage() {
             monthlyBookings.push({
               parent_id: user.id,
               tutor_id: tutorId,
-              student_id: selectedStudentId, // FIXED: Uses the child you picked from the list
+              student_id: selectedStudentId,
               scheduled_at: timestamp,
               status: 'pending'
             });
@@ -100,9 +114,15 @@ export default function SmartBookingPage() {
 
   return (
     <div className="p-10 max-w-4xl mx-auto bg-white min-h-screen">
-      <h1 className="text-5xl font-black italic uppercase text-gray-100 mb-2">Create Schedule</h1>
+      <h1 className="text-5xl font-black italic uppercase text-gray-900 mb-2">Create Schedule</h1>
       
-      {/* NEW: STUDENT SELECTION SECTION */}
+      {planName && (
+        <p className="text-blue-600 font-black uppercase italic text-sm mb-6 ml-2">
+          Active Plan: {planName}
+        </p>
+      )}
+      
+      {/* STUDENT SELECTION SECTION */}
       <div className="mb-10 p-6 bg-blue-50 rounded-[40px] border-4 border-blue-100">
         <label className="block text-blue-600 font-black uppercase italic mb-3 ml-2">Who is this for?</label>
         <select 
