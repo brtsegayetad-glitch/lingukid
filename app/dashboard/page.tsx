@@ -77,7 +77,7 @@ export default function ParentDashboard() {
                 onClick={() => router.push('/dashboard/add-child')} 
                 className="bg-yellow-400 px-3 py-1.5 border-2 border-black rounded-lg font-black text-[9px] uppercase active:translate-y-0.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
-                + Register New
+                + Register Student
               </button>
             </div>
             
