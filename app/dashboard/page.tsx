@@ -64,7 +64,7 @@ export default function ParentDashboard() {
               onClick={() => router.push('/dashboard/find-tutor')} 
               className="flex-1 sm:flex-none bg-black text-white px-5 py-3 rounded-2xl font-black uppercase text-[10px] hover:bg-blue-600 transition-all active:scale-95"
             >
-              Find Tutor
+              View Tutors and Packages
             </button>
             <button 
               onClick={() => supabase.auth.signOut().then(() => router.push('/'))} 
