@@ -81,34 +81,44 @@ export default function FindTutorPage() {
         )}
 
         {showPackages ? (
-          /* COMPACT LIST VIEW: PACKAGES */
-          <div className="space-y-3">
-            {packages.map((pkg) => (
-              <div 
-                key={pkg.id} 
-                onClick={() => setSelectedPkgId(pkg.id)}
-                className={`flex items-center justify-between p-4 rounded-2xl border-4 transition-all ${
-                  selectedPkgId === pkg.id ? 'border-blue-600 bg-blue-50' : 'border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                }`}
-              >
-                <div className="flex-1">
-                  <h3 className="text-sm font-black uppercase leading-tight">{pkg.name}</h3>
-                  <p className="text-[9px] font-bold text-gray-500 uppercase">{pkg.max_students} Students Max</p>
-                </div>
-                <div className="flex flex-col items-center px-4 border-x-2 border-gray-100">
-                  <span className="text-xl font-black leading-none">{pkg.monthly_hours}h</span>
-                  <span className="text-[8px] font-bold uppercase">/mo</span>
-                </div>
-                <div className="pl-4 text-right min-w-[80px]">
-                  <p className="text-[10px] font-black">{pkg.price_per_hour} ETB</p>
-                  <span className={`text-[9px] font-black uppercase ${selectedPkgId === pkg.id ? 'text-blue-600' : 'text-gray-400'}`}>
-                    {selectedPkgId === pkg.id ? 'SELECTED ✓' : 'SELECT'}
-                  </span>
-                </div>
-              </div>
-            ))}
+  /* COMPACT 2x2 GRID FOR MOBILE */
+  <div className="grid grid-cols-2 gap-3">
+    {packages.map((pkg) => (
+      <div 
+        key={pkg.id} 
+        onClick={() => setSelectedPkgId(pkg.id)}
+        className={`flex flex-col items-center justify-between p-3 rounded-2xl border-4 transition-all text-center ${
+          selectedPkgId === pkg.id 
+            ? 'border-blue-600 bg-blue-50' 
+            : 'border-black bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+        }`}
+      >
+        <div className="mb-1">
+          <h3 className="text-[10px] font-black uppercase leading-none truncate w-full">
+            {pkg.name}
+          </h3>
+          <p className="text-[7px] font-bold text-gray-500 uppercase mt-1">
+            Max {pkg.max_students}
+          </p>
+        </div>
+
+        <div className="my-2">
+          <span className="text-3xl font-black leading-none block">{pkg.monthly_hours}h</span>
+          <span className="text-[7px] font-black uppercase text-gray-400">Monthly</span>
+        </div>
+
+        <div className="w-full pt-2 border-t-2 border-gray-100">
+          <p className="text-[9px] font-black mb-1">{pkg.price_per_hour} ETB</p>
+          <div className={`text-[8px] font-black py-1 rounded-md uppercase ${
+            selectedPkgId === pkg.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
+          }`}>
+            {selectedPkgId === pkg.id ? 'PICKED' : 'SELECT'}
           </div>
-        ) : (
+        </div>
+      </div>
+    ))}
+  </div>
+) : (
           /* COMPACT LIST VIEW: TUTORS */
           <div className="space-y-3">
             {tutors.map((tutor) => (
