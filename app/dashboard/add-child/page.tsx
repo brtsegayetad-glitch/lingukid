@@ -105,53 +105,53 @@ function AddChildForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-gray-200">
-        <h2 className="text-2xl font-black text-gray-900 mb-6">Add a Student</h2>
+        <h2 className="text-2xl font-black text-gray-900 mb-6 uppercase italic tracking-tighter">Add a Student</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Child's Name</label>
+            <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Child's Name</label>
             <input 
               type="text" required
-              className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+              className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold focus:border-blue-600 outline-none transition-all"
               value={name} onChange={(e) => setName(e.target.value)}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">Age</label>
+              <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Age</label>
               <input 
                 type="number" required
-                className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+                className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold focus:border-blue-600 outline-none transition-all"
                 value={age} onChange={(e) => setAge(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">Grade Level</label>
+              <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Grade Level</label>
               <input 
-                type="text" placeholder="e.g. Grade 2" required
-                className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+                type="text" placeholder="Grade 2" required
+                className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold focus:border-blue-600 outline-none transition-all"
                 value={grade} onChange={(e) => setGrade(e.target.value)}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Contact Phone</label>
+            <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Contact Phone</label>
             <input 
               type="text" placeholder="09..." required
-              className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+              className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold focus:border-blue-600 outline-none transition-all"
               value={phone} onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
-          <div className="pt-2 border-t border-dashed border-gray-200">
-            <label className="block text-sm font-bold text-gray-700 mb-1">Select Plan / Package</label>
+          <div className="pt-2 border-t-2 border-dashed border-gray-100">
+            <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Select Plan</label>
             <select 
               required
-              className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+              className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold outline-none"
               value={packageId}
               onChange={(e) => setPackageId(e.target.value)}
             >
@@ -163,10 +163,10 @@ function AddChildForm() {
           </div>
 
           <div className="pt-2">
-            <label className="block text-sm font-bold text-gray-700 mb-1">Choose Tutor</label>
+            <label className="block text-[10px] font-black uppercase text-gray-500 mb-1 tracking-widest">Choose Tutor</label>
             <select 
               required
-              className="w-full p-3 border border-gray-300 rounded-xl text-gray-900 bg-white"
+              className="w-full p-3 border-2 border-gray-100 rounded-xl text-gray-900 bg-white font-bold outline-none"
               value={tutorId}
               onChange={(e) => setTutorId(e.target.value)}
             >
@@ -180,17 +180,17 @@ function AddChildForm() {
           </div>
 
           <div className="pt-2">
-            <label className="block text-sm font-bold text-gray-700 mb-2">Preferred Days & Times</label>
-            <div className="space-y-3">
+            <label className="block text-[10px] font-black uppercase text-gray-500 mb-2 tracking-widest">Preferred Days & Times</label>
+            <div className="grid grid-cols-1 gap-2">
               {daysOfWeek.map(day => (
                 <div key={day} className="flex items-center justify-between bg-gray-50 p-2 rounded-xl border border-gray-100">
                   <button
                     type="button"
                     onClick={() => toggleDay(day)}
-                    className={`w-20 py-2 rounded-lg text-[10px] font-black transition-all border-2 ${
+                    className={`w-20 py-2 rounded-lg text-[9px] font-black transition-all border-2 ${
                       selectedDays.includes(day) 
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
-                      : 'bg-white text-gray-400 border-gray-200 hover:border-blue-300'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
+                      : 'bg-white text-gray-400 border-gray-200'
                     }`}
                   >
                     {day.toUpperCase()}
@@ -200,7 +200,7 @@ function AddChildForm() {
                     <input 
                       type="time"
                       required
-                      className="p-1 border border-gray-300 rounded-lg text-xs font-bold text-gray-900"
+                      className="p-1 border-2 border-gray-200 rounded-lg text-xs font-black text-gray-900 outline-none"
                       value={dayTimes[day]}
                       onChange={(e) => handleTimeChange(day, e.target.value)}
                     />
@@ -212,19 +212,30 @@ function AddChildForm() {
 
           <button 
             type="submit" disabled={loading}
-            className="w-full py-4 bg-blue-600 text-white rounded-xl font-black shadow-lg hover:bg-blue-700 mt-4"
+            className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase text-xs border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-all mt-4"
           >
-            {loading ? 'Saving...' : 'Register Student'}
+            {loading ? 'Saving Data...' : 'Register Student →'}
           </button>
           
           <button 
             type="button" onClick={() => router.back()}
-            className="w-full text-gray-500 font-bold py-2"
+            className="w-full text-gray-400 font-black uppercase text-[10px] py-2 italic underline underline-offset-4"
           >
-            Cancel
+            Cancel and Return
           </button>
         </form>
       </div>
+
+      {/* FOOTER / TAIL SECTION */}
+      <footer className="mt-10 mb-6 text-center">
+        <div className="h-1 w-12 bg-gray-200 rounded-full mx-auto mb-4"></div>
+        <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em]">
+          lingukid@2026
+        </p>
+        <p className="text-[8px] font-bold text-gray-200 uppercase tracking-tighter mt-1">
+          Bahir Dar, Ethiopia
+        </p>
+      </footer>
     </div>
   );
 }
